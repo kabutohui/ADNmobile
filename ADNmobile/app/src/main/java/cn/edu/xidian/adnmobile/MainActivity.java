@@ -1,18 +1,18 @@
 package cn.edu.xidian.adnmobile;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
-import cn.edu.xidian.adnmobile.view.CBitmap;
 import cn.edu.xidian.adnmobile.view.CDrawable;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener{
@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     private Button btn_dataCollect,btn_switch,btn_function;
     private ImageView iv_trash,iv_zoomin,iv_zoomout,iv_reset;
     private CanvasView mCanvasView,mCanvasDataCollect,mCanvasSwitch,mCanvasFunction;
+    private ListView lv_datacollect,lv_switch,lv_function;
     private Bitmap mBitmap;
     private CDrawable mPutTrash,mPutIcon;
     private int Widget_Width,Widget_heigh;
@@ -53,29 +54,19 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         btn_switch = (Button) findViewById(R.id.btn_switch);
         btn_function = (Button) findViewById(R.id.btn_function);
         mCanvasView = (CanvasView) findViewById(R.id.action_editor_canvas_test);
-        mCanvasDataCollect = (CanvasView) findViewById(R.id.canvas_data);
-        mCanvasSwitch = (CanvasView) findViewById(R.id.canvas_switch);
-        mCanvasFunction = (CanvasView) findViewById(R.id.canvas_function);
+        lv_datacollect = (ListView) findViewById(R.id.list_data);
+        lv_switch = (ListView) findViewById(R.id.list_switch);
+        lv_function = (ListView) findViewById(R.id.list_function);
         iv_trash = (ImageView) findViewById(R.id.iv_trash);
         iv_reset = (ImageView) findViewById(R.id.iv_reset);
         iv_zoomin = (ImageView) findViewById(R.id.iv_zoomin);
         iv_zoomout = (ImageView) findViewById(R.id.iv_zoomout);
-
     }
 
     private void initData()
     {
         mCanvasView.setBackgroundMode(CanvasView.BACKGROUND_STYLE_BLANK);
         mCanvasView.setBackgroundColor(Color.WHITE);
-
-        mCanvasDataCollect.setBackgroundMode(CanvasView.BACKGROUND_STYLE_BLANK);
-        mCanvasDataCollect.setBackgroundColor(Color.WHITE);
-
-        mCanvasSwitch.setBackgroundMode(CanvasView.BACKGROUND_STYLE_BLANK);
-        mCanvasSwitch.setBackgroundColor(Color.WHITE);
-
-        mCanvasFunction.setBackgroundMode(CanvasView.BACKGROUND_STYLE_BLANK);
-        mCanvasFunction.setBackgroundColor(Color.WHITE);
 
         //放置trash
         iv_trash.setImageResource(R.drawable.blockly_trash);
@@ -136,18 +127,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
 
         mCanvasDataCollect.setOnWidgetUpListener(new CanvasView.onWidgetUpListener() {
             @Override
-            public void onWidgetUp(int index, int x, int y) {
-                if (IsLongPress) {
-                    //手指移开时
-                    mCanvasView.setVisibility(View.VISIBLE);    //设置第一层的画布为显示
-                    mCanvasDataCollect.setVisibility(View.GONE);      //设置第二层的画布为隐藏
-
-//                    //若控件在删除区，则删除第一层画布上的次控件
-//                    if ((x > mXcoords && x < mXcoords + 250) && (y > mYcoords && y < mYcoords + 250)) {
-//                        mCanvasView.mDrawableList.remove(index);
-//                    }
-
-                    IsLongPress = false;
+            public void onCanvasClick(int x, int y) {
+                if (x > 130) {
+                    Toast.makeText(MainActivity.this, "点击了画布", Toast.LENGTH_SHORT).show();
+                    lv_function.setVisibility(View.GONE);
+                    lv_switch.setVisibility(View.GONE);
+                    lv_datacollect.setVisibility(View.GONE);
                 }
             }
         });
@@ -159,19 +144,26 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         switch (v.getId())
         {
             case R.id.btn_dataCollect:
-                mCanvasSwitch.setVisibility(View.GONE);
-                mCanvasFunction.setVisibility(View.GONE);
-                setIcon2Canvas(datacollect, mCanvasDataCollect);
+                lv_function.setVisibility(View.GONE);
+                lv_switch.setVisibility(View.GONE);
+                setIcon2List(datacollect, lv_datacollect);
+                lv_datacollect.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                        Toast.makeText(MainActivity.this, "you clicked the"+position, Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                });
                 break;
             case R.id.btn_switch:
-                mCanvasDataCollect.setVisibility(View.GONE);
-                mCanvasFunction.setVisibility(View.GONE);
-                setIcon2Canvas(switchchoose,mCanvasSwitch);
+                lv_datacollect.setVisibility(View.GONE);
+                lv_function.setVisibility(View.GONE);
+                setIcon2List(switchchoose, lv_switch);
                 break;
             case R.id.btn_function:
-                mCanvasSwitch.setVisibility(View.GONE);
-                mCanvasDataCollect.setVisibility(View.GONE);
-                setIcon2Canvas(function,mCanvasFunction);
+                lv_datacollect.setVisibility(View.GONE);
+                lv_switch.setVisibility(View.GONE);
+                setIcon2List(function, lv_function);
                 break;
             case R.id.iv_reset:
                 iv_reset.setOnClickListener(new OnClickListener() {
@@ -205,17 +197,11 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         }
     }
 
-    private void setIcon2Canvas(int[] icon,CanvasView canvasView)
+    private void setIcon2List(int[] icon,ListView listView)
     {
-        canvasView.setBackgroundMode(CanvasView.BACKGROUND_STYLE_BLANK);
-        canvasView.setBackgroundColor(Color.LTGRAY);
-        canvasView.setVisibility(View.VISIBLE);
-        for (int i = 0;i < icon.length;i++)
-        {
-            mBitmap = BitmapFactory.decodeResource(getResources(), icon[i]);
-            mPutIcon = new CBitmap(mBitmap, 0,i*210 );
-            canvasView.addCanvasDrawable(mPutIcon);
-        }
+        listView.setVisibility(View.VISIBLE);
+        ListItems listItems = new ListItems(this,listView,icon);
+        listItems.listshow();
     }
 
     //获取屏幕的大小
