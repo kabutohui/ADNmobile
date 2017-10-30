@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent">
+        <Button
+            android:id="@+id/btn_dataCollect"
+            android:text="数据采集模块"
+            android:textSize="20dp"
+            android:textColor="#ffffff"
+            android:layout_weight="1"
+            android:layout_marginBottom="5dp"
+            android:layout_width="39dp"
+            android:layout_height="wrap_content"
+            android:background="#0bcaf9" />
+        <Button
+            android:id="@+id/btn_switch"
+            android:text="开关控制模块"
+            android:textSize="20dp"
+            android:textColor="#ffffff"
+            android:layout_weight="1"
+            android:layout_marginBottom="5dp"
+            android:layout_width="39dp"
+            android:layout_height="wrap_content"
+            android:background="#0bcaf9" />
+        <Button
+            android:id="@+id/btn_function"
+            android:text="功能响应模块"
+            android:textSize="20dp"
+            android:textColor="#ffffff"
+            android:layout_weight="1"
+            android:layout_width="39dp"
+            android:layout_height="wrap_content"
+            android:background="#0bcaf9" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent">
+        <cn.edu.xidian.adnmobile.CanvasView
+            android:id="@+id/action_editor_canvas_test"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+
+
+        <cn.edu.xidian.adnmobile.CanvasView
+            android:id="@+id/canvas_data"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <cn.edu.xidian.adnmobile.CanvasView
+            android:id="@+id/canvas_switch"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <cn.edu.xidian.adnmobile.CanvasView
+            android:id="@+id/canvas_function"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <ImageView
+            android:id="@+id/iv_trash"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/iv_reset"
+            android:layout_above="@+id/iv_trash"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignLeft="@+id/iv_trash"
+            android:layout_alignStart="@+id/iv_trash" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/iv_zoomout"
+            android:layout_above="@+id/iv_reset"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignLeft="@+id/iv_reset"
+            android:layout_alignStart="@+id/iv_reset" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/iv_zoomin"
+            android:layout_above="@+id/iv_zoomout"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignLeft="@+id/iv_zoomout"
+            android:layout_alignStart="@+id/iv_zoomout" />
+
+
+
+
+    </RelativeLayout>
+
+
+</LinearLayout>
