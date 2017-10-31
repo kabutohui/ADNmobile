@@ -62,9 +62,8 @@ public class CBitmap implements CDrawable {
 
     @Override
     public void draw(Canvas canvas) {
-//        Bitmap nsrc = Bitmap.createScaledBitmap(mBitmap, width, height, true);
-//        canvas.drawBitmap(nsrc, x, y, mPaint);
-        canvas.drawBitmap(mBitmap, x, y, mPaint);
+        //以图片的正中心设置坐标
+        canvas.drawBitmap(mBitmap, x - mBitmap.getWidth()/2, y - mBitmap.getHeight()/2, mPaint);
     }
 
     /*public void setAnimation(){

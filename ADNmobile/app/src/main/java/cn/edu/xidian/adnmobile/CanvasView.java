@@ -240,7 +240,6 @@ public class CanvasView extends FabricView {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         mScaleGestureDetector.onTouchEvent(event);
-//        mTapGestureDetector.onTouchEvent(event);
         event.offsetLocation(getScrollX(), getScrollY());                //缩放后偏移的距离，保证缩放后触点跟缩放前对应
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
@@ -248,7 +247,6 @@ public class CanvasView extends FabricView {
                 DownX = event.getX();//float DownX
                 DownY = event.getY();//float DownY
                 //判断点击的坐标范围是否在控件上
-//                Log.i("everb", "控件的list集合：" + mDrawableList);
                 mDown2Widget = getDown2Widget();
                 moveX = 0;
                 moveY = 0;
@@ -270,11 +268,10 @@ public class CanvasView extends FabricView {
                     mMoveTime = System.currentTimeMillis();
                     long DValueTime = mMoveTime - mDownTime;
                     System.out.println("long touch before "+DValueTime+">>>>>>>>>>>>>>>>>>>");
-                    //if (DValueTime>200){
                     if(getDown2Widget() != -1) {
                         if (DValueTime > 20) {
                             if (mOnWidgetLongPressListener != null) {
-                                System.out.println("long touch>>>>>>>>>>>>>>>>>>>"+getDown2Widget());
+                                System.out.println("long touch item "+getDown2Widget());
                                 mOnWidgetLongPressListener.onWidgetLongPress(mDown2Widget, (int) moveX1, (int) moveY1);
                             }
                         }
