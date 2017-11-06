@@ -25,6 +25,11 @@ public class ActionWidget  implements CDrawable {
     public final static int ACTION_SCEND=1;
     public final static int ACTION_THRIST=2;
 
+    //listView Falg
+    public final static int datacollect_flag = 1;
+    public final static int switch_flag = 2;
+    public final static int function_flag = 3;
+
     public int actionType;
 
 

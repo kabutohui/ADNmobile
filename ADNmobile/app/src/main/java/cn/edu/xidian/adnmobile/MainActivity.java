@@ -30,15 +30,19 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     private boolean IsLongPress = false;
     //是否进入删除区标志
     private boolean IsDeleteFlag = false;
+    //listView Falg
+    private int datacollect_flag = 1;
+    private int switch_flag = 2;
+    private int function_flag = 3;
 
     private CBitmap mGamePadBitmap;//临时变量
 
     //datacollect
-    private int datacollect[] = {R.drawable.datacollect_1,R.drawable.datacollect_2,R.drawable.datacollect_3,R.drawable.datacollect_1,R.drawable.datacollect_2,R.drawable.datacollect_3,R.drawable.datacollect_1,R.drawable.datacollect_2,R.drawable.datacollect_3,R.drawable.datacollect_1,R.drawable.datacollect_2,R.drawable.datacollect_3,};
+    private int datacollect[] = {R.drawable.datacollect_clock,R.drawable.datacollect_humidity,R.drawable.datacollect_lightsensor,R.drawable.datacollect_temperature,R.drawable.datacollect_soilwet,R.drawable.datacollect_waterdeep};
     //switch
-    private int switchchoose[] = {R.drawable.switch_1,R.drawable.switch_2,R.drawable.function_1,R.drawable.function_1,};
+    private int switchchoose[] = {R.drawable.switch_relay,R.mipmap.ic_launcher};
     //function
-    private int function[] = {R.drawable.function_1,R.drawable.function_1,R.drawable.function_1,};
+    private int function[] = {R.drawable.function_bulb,R.drawable.function_fan,R.drawable.function_aircondition,R.drawable.function_sound};
 
 
     @Override
@@ -161,17 +165,17 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
             case R.id.btn_dataCollect:
                 lv_function.setVisibility(View.GONE);
                 lv_switch.setVisibility(View.GONE);
-                setIcon2List(datacollect, lv_datacollect);
+                setIcon2List(datacollect_flag,datacollect, lv_datacollect);
                 break;
             case R.id.btn_switch:
                 lv_datacollect.setVisibility(View.GONE);
                 lv_function.setVisibility(View.GONE);
-                setIcon2List(switchchoose, lv_switch);
+                setIcon2List(switch_flag,switchchoose, lv_switch);
                 break;
             case R.id.btn_function:
                 lv_datacollect.setVisibility(View.GONE);
                 lv_switch.setVisibility(View.GONE);
-                setIcon2List(function, lv_function);
+                setIcon2List(function_flag,function, lv_function);
                 break;
             case R.id.iv_reset:
                 iv_reset.setOnClickListener(new OnClickListener() {
@@ -205,10 +209,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         }
     }
 
-    private void setIcon2List(final int[] icon, final ListView listView)
+    private void setIcon2List(final int flag,final int[] icon, final ListView listView)
     {
         listView.setVisibility(View.VISIBLE);
-        ListItems listItems = new ListItems(this,listView,icon);
+        ListItems listItems = new ListItems(this,listView,flag);
         listItems.listshow();
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override

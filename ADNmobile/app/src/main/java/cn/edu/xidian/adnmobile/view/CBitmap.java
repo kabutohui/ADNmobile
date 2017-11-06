@@ -11,6 +11,22 @@ public class CBitmap implements CDrawable {
     private Paint mPaint;
     private int mRotDegree;
 
+    //设置控件属性,确定是那一模块
+    public int Item_Attributes;
+
+    //设置控件边沿连线坐标点
+    public float beforeX;
+    public float beforeY;
+    public float nowX;
+    public float nowY;
+
+    //与其相连的下一个控件的连线坐标点
+    public float nextX;
+    public float nextY;
+
+
+
+
     public CBitmap(Bitmap src, int x, int y) {
         this(src, x, y, null);
     }

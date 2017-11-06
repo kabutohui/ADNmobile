@@ -55,21 +55,21 @@
         <ListView
             android:id="@+id/list_data"
             android:visibility="gone"
-            android:layout_width="130dp"
+            android:layout_width="140dp"
             android:layout_height="match_parent">
         </ListView>
 
         <ListView
             android:id="@+id/list_switch"
             android:visibility="gone"
-            android:layout_width="130dp"
+            android:layout_width="140dp"
             android:layout_height="match_parent">
         </ListView>
 
         <ListView
             android:id="@+id/list_function"
             android:visibility="gone"
-            android:layout_width="130dp"
+            android:layout_width="140dp"
             android:layout_height="match_parent">
         </ListView>
 
