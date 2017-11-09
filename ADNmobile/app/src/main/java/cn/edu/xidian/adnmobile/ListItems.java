@@ -17,20 +17,23 @@ public class ListItems {
     private Context context = null;
     private ListView listView;
     private int flag;
+    public  ItemBase[][] datasave = {
+            //datacollect
+            {new ItemBase("时钟","获取当前的时间",R.drawable.datacollect_clock),
+            new ItemBase( "环境湿度","获取环境当前的湿度",R.drawable.datacollect_humidity),
+            new ItemBase("光敏","获取环境当前的光线强度",R.drawable.datacollect_lightsensor),
+            new ItemBase("环境温度","获取环境当前的温度",R.drawable.datacollect_temperature),
+            new ItemBase("土壤湿度","获取土壤湿度",R.drawable.datacollect_soilwet),
+            new ItemBase("水深","获取当前水深",R.drawable.datacollect_waterdeep)},
 
-    public ItemBase[] datacollect = {new ItemBase("时钟","获取当前的时间",R.drawable.datacollect_clock),
-                                     new ItemBase( "环境湿度","获取环境当前的湿度",R.drawable.datacollect_humidity),
-                                     new ItemBase("光敏","获取环境当前的光线强度",R.drawable.datacollect_lightsensor),
-                                     new ItemBase("环境温度","获取环境当前的温度",R.drawable.datacollect_temperature),
-                                     new ItemBase("土壤湿度","获取土壤湿度",R.drawable.datacollect_soilwet),
-                                     new ItemBase("水深","获取当前水深",R.drawable.datacollect_waterdeep)};
+            //switch
+            {new ItemBase("开关","设置阈值以控制通断",R.drawable.switch_relay)},
 
-    public ItemBase[] switchchoose = {new ItemBase("开关","设置阈值以控制通断",R.drawable.switch_relay)};
-
-    public ItemBase[] functions = {new ItemBase("灯泡"," ",R.drawable.function_bulb),
-                                    new ItemBase("风扇"," ",R.drawable.function_fan),
-                                    new ItemBase("空调"," ",R.drawable.function_aircondition),
-                                    new ItemBase("家庭音响"," ",R.drawable.function_sound),};
+            //function
+            {new ItemBase("灯泡"," ",R.drawable.function_bulb),
+            new ItemBase("风扇"," ",R.drawable.function_fan),
+            new ItemBase("空调"," ",R.drawable.function_aircondition),
+            new ItemBase("家庭音响"," ",R.drawable.function_sound)}};
 
 
     public ListItems(Context context,ListView listView,int flag){
@@ -50,28 +53,20 @@ public class ListItems {
     private List<Map<String,Object>> getData()
     {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-        ItemBase[] itemBases = null;
-        switch(flag)
-        {
-            case ActionWidget.datacollect_flag:
-                itemBases = datacollect;
-                break;
-            case ActionWidget.switch_flag:
-                itemBases = switchchoose;
-                break;
-            case ActionWidget.function_flag:
-                itemBases = functions;
-                break;
-        }
-        for (int i = 0; i < itemBases.length;i++)
+
+        for (int i = 0; i < datasave[flag-1].length;i++)
         {
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put("Name", itemBases[i].Name);
-            map.put("Details", itemBases[i].Details);
-            map.put("img", itemBases[i].icon);
+            map.put("Name", datasave[flag-1][i].Name);
+            map.put("Details", datasave[flag-1][i].Details);
+            map.put("img", datasave[flag-1][i].icon);
             list.add(map);
         }
 
         return list;
+    }
+
+    public ItemBase[][] getDatasave() {
+        return datasave;
     }
 }

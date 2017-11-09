@@ -30,6 +30,17 @@ public class ActionWidget  implements CDrawable {
     public final static int switch_flag = 2;
     public final static int function_flag = 3;
 
+
+    //function area X, Y
+    public final static int functionX = 320;
+    public final static int functionY1 = 185;
+    public final static int functionY2 = 400;
+    public final static int functionY3 = 625;
+
+    //function area radius
+    public final static int function_reius = 100;
+
+
     public int actionType;
 
 
