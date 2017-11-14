@@ -123,7 +123,6 @@
             android:layout_centerHorizontal="true" />
 
 
-
         <ImageView
             android:id="@+id/iv_trash"
             android:layout_width="50dp"
@@ -162,7 +161,29 @@
             android:layout_alignLeft="@+id/iv_zoomout"
             android:layout_alignStart="@+id/iv_zoomout" />
 
+        <TextView
+            android:id="@+id/tv_dataCollect"
+            android:textSize="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="323dp"
+            android:layout_marginLeft="205dp"/>
 
+        <TextView
+            android:id="@+id/tv_switch"
+            android:textSize="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="213dp"
+            android:layout_marginLeft="205dp"/>
+
+        <TextView
+            android:id="@+id/tv_funciton"
+            android:textSize="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="103dp"
+            android:layout_marginLeft="205dp"/>
 
 
     </RelativeLayout>

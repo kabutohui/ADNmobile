@@ -17,23 +17,42 @@ public class ListItems {
     private Context context = null;
     private ListView listView;
     private int flag;
+//    public  ItemBase[][] datasave = {
+//            //datacollect
+//            {new ItemBase("时钟","获取当前的时间",R.drawable.datacollect_clock),
+//            new ItemBase( "环境湿度","获取环境当前的湿度",R.drawable.datacollect_humidity),
+//            new ItemBase("光敏","获取环境当前的光线强度",R.drawable.datacollect_lightsensor),
+//            new ItemBase("环境温度","获取环境当前的温度",R.drawable.datacollect_temperature),
+//            new ItemBase("土壤湿度","获取土壤湿度",R.drawable.datacollect_soilwet),
+//            new ItemBase("水深","获取当前水深",R.drawable.datacollect_waterdeep)},
+//
+//            //switch
+//            {new ItemBase("开关","设置阈值以控制通断",R.drawable.switch_relay)},
+//
+//            //function
+//            {new ItemBase("灯泡"," ",R.drawable.function_bulb),
+//            new ItemBase("风扇"," ",R.drawable.function_fan),
+//            new ItemBase("空调"," ",R.drawable.function_aircondition),
+//            new ItemBase("家庭音响"," ",R.drawable.function_sound)}};
+
     public  ItemBase[][] datasave = {
             //datacollect
-            {new ItemBase("时钟","获取当前的时间",R.drawable.datacollect_clock),
-            new ItemBase( "环境湿度","获取环境当前的湿度",R.drawable.datacollect_humidity),
-            new ItemBase("光敏","获取环境当前的光线强度",R.drawable.datacollect_lightsensor),
-            new ItemBase("环境温度","获取环境当前的温度",R.drawable.datacollect_temperature),
-            new ItemBase("土壤湿度","获取土壤湿度",R.drawable.datacollect_soilwet),
-            new ItemBase("水深","获取当前水深",R.drawable.datacollect_waterdeep)},
+            {new ItemBase("时钟","获取当前的时间",R.drawable.datacollect_clock,"Clock"),
+                    new ItemBase( "环境湿度","获取环境当前的湿度",R.drawable.datacollect_humidity,"Humidity"),
+                    new ItemBase("光敏传感器","获取环境当前的光线强度",R.drawable.datacollect_lightsensor,"Light_sensitive"),
+                    new ItemBase("环境温度","获取环境当前的温度",R.drawable.datacollect_temperature,"Temperature"),
+                    new ItemBase("土壤湿度","获取土壤湿度",R.drawable.datacollect_soilwet,"Soilwet"),
+                    new ItemBase("水深传感器","获取当前水深",R.drawable.datacollect_waterdeep,"Waterdeep")},
 
             //switch
-            {new ItemBase("开关","设置阈值以控制通断",R.drawable.switch_relay)},
+            {new ItemBase("switch","设置阈值以控制通断",R.drawable.switch_relay,"switch")},
 
             //function
-            {new ItemBase("灯泡"," ",R.drawable.function_bulb),
-            new ItemBase("风扇"," ",R.drawable.function_fan),
-            new ItemBase("空调"," ",R.drawable.function_aircondition),
-            new ItemBase("家庭音响"," ",R.drawable.function_sound)}};
+            {new ItemBase("灯泡"," ",R.drawable.function_bulb,"Bulb"),
+                    new ItemBase("风扇"," ",R.drawable.function_fan,"Fan"),
+                    new ItemBase("空调"," ",R.drawable.function_aircondition,"Aircondition"),
+                    new ItemBase("家庭音响"," ",R.drawable.function_sound,"Sound")}};
+
 
 
     public ListItems(Context context,ListView listView,int flag){

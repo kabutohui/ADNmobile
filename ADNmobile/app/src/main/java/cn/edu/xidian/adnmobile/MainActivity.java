@@ -19,13 +19,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.net.URLConnection;
 
 import cn.edu.xidian.adnmobile.view.CBitmap;
 import cn.edu.xidian.adnmobile.view.CDrawable;
@@ -37,11 +32,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     private ImageView iv_trash,iv_zoomin,iv_zoomout,iv_reset,iv_function,iv_switch,iv_datacollect,iv_rectangle1,iv_rectangle2;
     private CanvasView mCanvasView;
     private ListView lv_datacollect,lv_switch,lv_function;
+    private TextView tv_datacollect,tv_switch,tv_function;
     private Bitmap mBitmap;
     private CDrawable mPutTrash,mPutIcon;
     private int Widget_Width,Widget_heigh;
 
-    public static final String SERVER_URL = "http://10.170.63.165:8080/TestServer/api.jsp";
+    private String dataCollectName;
 
     private boolean IsLongPress = false;
     //是否进入删除区标志
@@ -58,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
+
         GetWidgetWidthAndHeight();
         initView();
         initData();
@@ -80,32 +77,36 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                 Toast.makeText(this, "添加连线", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.create:
-                //Toast.makeText(this, "生成", Toast.LENGTH_SHORT).show();
                 if(mCanvasView.mDrawableList.size() >= 4)
                     Toast.makeText(this, "存在多余控件，生成模块失败！", Toast.LENGTH_LONG).show();
                 else
                 {
                     Toast.makeText(this, "生成模块成功！", Toast.LENGTH_LONG).show();
+                    for(int i = 0;i < mCanvasView.mDrawableList.size();i++)
+                    {
+                        mGamePadBitmap = (CBitmap) (mCanvasView.mDrawableList.get(i));
+                        if(mGamePadBitmap.Item_Attributes == ActionWidget.datacollect_flag)
+                        {
+                            dataCollectName = mGamePadBitmap.itemName;
+                        }
+                    }
                     JsonDataPakage jsonDataPakage = new JsonDataPakage(mCanvasView.mDrawableList);
-                    URLConnection uc = null;
-                    try {
-                        uc = new URL(SERVER_URL).openConnection();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    uc.setDoOutput(true);
-                    try {
-                        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(uc.getOutputStream(),"utf-8"));
-                        StringBuffer paramStr = new StringBuffer();
-                        paramStr.append("test").append("=").append(jsonDataPakage.JsonPackage());
-                        bw.write(paramStr.toString());
-                        bw.flush();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
 
+                    new NetConnection(ActionWidget.SERVER_URL_POST, HttpMethod.POST, new NetConnection.SuccessCallback() {
+                        @Override
+                        public void onSuccess(String result) {
+                            System.out.println("<<<<<<<<<<<<数据传输成功！Requrst = "+result);
+                            new DataUpdate(MainActivity.this,tv_datacollect,dataCollectName);
+                        }
+                    }, new NetConnection.FailCallback() {
+                        @Override
+                        public void onFail() {
+                            System.out.println("<<<<<<<<<<<<数据传输失败！");
+                        }
+                    },"test",jsonDataPakage.JsonPackage());
 
                 }
+
                 break;
             case R.id.upload:
                 Toast.makeText(this, "上传模块", Toast.LENGTH_SHORT).show();
@@ -116,6 +117,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
 
     private void initView()
     {
+        tv_datacollect = (TextView) findViewById(R.id.tv_dataCollect);
+        tv_switch = (TextView) findViewById(R.id.tv_switch);
+        tv_function = (TextView) findViewById(R.id.tv_funciton);
+
         btn_dataCollect = (Button) findViewById(R.id.btn_dataCollect);
         btn_switch = (Button) findViewById(R.id.btn_switch);
         btn_function = (Button) findViewById(R.id.btn_function);
@@ -196,6 +201,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                     iv_trash.setImageResource(R.drawable.blockly_trash);
                     IsDeleteFlag = false;
                 }
+
+
             }
         });
 
@@ -216,12 +223,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                     final EditText Threshold = (EditText) view
                             .findViewById(R.id.edThreshold);
 
+                    Threshold.setText(mGamePadBitmap.setThresholdValue);
                     builder.setPositiveButton("确定",
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     mGamePadBitmap.setThresholdValue = Threshold.getText().toString();
-
+                                    //当前阈值;
+                                    tv_switch.setText("当前阈值："+mGamePadBitmap.setThresholdValue);
                                 }
                             });
 
@@ -234,7 +243,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                             });
                     builder.show();
                 }
-
             }
         });
 
@@ -258,6 +266,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                 }
 
                 //判断图标是否出现在指定的功能区
+                if (index >= 0) {
                     if ((mGamePadBitmap.Item_Attributes == ActionWidget.function_flag)) {
                         double abs = Math.sqrt((x - ActionWidget.functionX) * (x - ActionWidget.functionX) + (y - ActionWidget.functionY1) * (y - ActionWidget.functionY1));
                         if (abs < ActionWidget.function_reius) {
@@ -279,7 +288,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                             mGamePadBitmap.setYcoords(ActionWidget.functionY3);
                         }
                     }
+
                 }
+            }
         });
 
     }
@@ -351,7 +362,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                 mBitmap = BitmapFactory.decodeResource(getResources(), datasave[flag-1][position].icon);
                 mGamePadBitmap = new CBitmap(mBitmap, 200, 200);
                 mGamePadBitmap.Item_Attributes = flag;
-                mGamePadBitmap.itemName = datasave[flag-1][position].Name;
+                mGamePadBitmap.itemName = datasave[flag-1][position].EngName;
                 mCanvasView.addCanvasDrawable(mGamePadBitmap);
                 return true;
             }
