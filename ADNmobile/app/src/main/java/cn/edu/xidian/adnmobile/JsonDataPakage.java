@@ -1,6 +1,5 @@
 package cn.edu.xidian.adnmobile;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -55,9 +54,11 @@ public class JsonDataPakage {
     {
         JSONObject jsonObject = null;
         try {
-            jsonObject = new JSONObject("{\"value\":[26.0]}");
-            JSONArray jsonArray = jsonObject.getJSONArray("value");
-            return jsonArray.toString();
+            jsonObject = new JSONObject(string);
+            //JSONArray jsonArray =  jsonObject.getJSONArray("value");
+            //return jsonArray.toString();
+            String value = jsonObject.getString("value");
+            return value;
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -65,12 +66,4 @@ public class JsonDataPakage {
         return "ERROR";
     }
 
-    public static String JSONTokener(String str_json) {
-
-        if (str_json.startsWith("\ufeff")) {
-            return str_json.substring(1);
-        } else {
-            return str_json;
-        }
-    }
 }

@@ -41,11 +41,17 @@ public class ActionWidget  implements CDrawable {
     public final static int function_reius = 100;
 
 
+
     public int actionType;
 
     //server url
     public static final String SERVER_URL_POST = "http://116.196.101.27:36666/todo/api/v1.0/run/";
     public static final String SERVER_URL_GET = "http://116.196.101.27:36666/todo/api/v1.0/value/12";
+
+
+    //线程flag
+    public static boolean ThreadFlag = false;
+
 
     public ActionWidget(int x,int y,Paint paint){
         setXcoords(x);

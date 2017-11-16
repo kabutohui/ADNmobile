@@ -16,23 +16,10 @@ public class CBitmap implements CDrawable {
 
     //设置设备名称
     public String itemName;
+    public String itemCNName;
     //设置switch控件阈值
     public String setThresholdValue  = "null";
 
-    //设置控件左边沿连线坐标点
-    public float beforeLX = 0;
-    public float beforeLY = 0;
-    public float nowLX = 0;
-    public float nowLY = 0;
-
-    //设置控件右边沿连线坐标点
-    public float beforeRX = 0;
-    public float beforeRY = 0;
-    public float nowRX = 0;
-    public float nowRY = 0;
-
-    //与其相连的下一个控件的连线坐标点
-    public float[] nextX_Y = {0,0};
 
 
 

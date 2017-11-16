@@ -1,6 +1,5 @@
 package cn.edu.xidian.adnmobile;
 
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -82,21 +81,18 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                 else
                 {
                     Toast.makeText(this, "生成模块成功！", Toast.LENGTH_LONG).show();
-                    for(int i = 0;i < mCanvasView.mDrawableList.size();i++)
-                    {
-                        mGamePadBitmap = (CBitmap) (mCanvasView.mDrawableList.get(i));
-                        if(mGamePadBitmap.Item_Attributes == ActionWidget.datacollect_flag)
-                        {
-                            dataCollectName = mGamePadBitmap.itemName;
-                        }
-                    }
+
+                    //关闭前一个线程
+                    ActionWidget.ThreadFlag = false;
+
                     JsonDataPakage jsonDataPakage = new JsonDataPakage(mCanvasView.mDrawableList);
 
                     new NetConnection(ActionWidget.SERVER_URL_POST, HttpMethod.POST, new NetConnection.SuccessCallback() {
                         @Override
                         public void onSuccess(String result) {
                             System.out.println("<<<<<<<<<<<<数据传输成功！Requrst = "+result);
-                            new DataUpdate(MainActivity.this,tv_datacollect,dataCollectName);
+                            //dataUpdate = new DataUpdate(MainActivity.this,tv_datacollect,tv_function,mCanvasView);
+                            new DataUpdate(MainActivity.this,tv_datacollect,tv_function,mCanvasView);
                         }
                     }, new NetConnection.FailCallback() {
                         @Override
@@ -132,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         iv_reset = (ImageView) findViewById(R.id.iv_reset);
         iv_zoomin = (ImageView) findViewById(R.id.iv_zoomin);
         iv_zoomout = (ImageView) findViewById(R.id.iv_zoomout);
+
 
         iv_function = (ImageView) findViewById(R.id.iv_function);
         iv_rectangle1 = (ImageView) findViewById(R.id.iv_rectangle1);
@@ -212,36 +209,48 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                 Toast.makeText(MainActivity.this, "长按了控件:" + index, Toast.LENGTH_SHORT).show();
                 mGamePadBitmap = (CBitmap) (mCanvasView.mDrawableList.get(index));
                 if (mGamePadBitmap.Item_Attributes == ActionWidget.switch_flag) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setTitle("输入阈值");
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     // 通过LayoutInflater来加载一个xml的布局文件作为一个View对象
                     View view = LayoutInflater.from(MainActivity.this).inflate(
                             R.layout.popup_view, null);
                     // 设置我们自己定义的布局文件作为弹出框的Content
                     builder.setView(view);
 
-                    final EditText Threshold = (EditText) view
-                            .findViewById(R.id.edThreshold);
+                    //这个位置十分重要，只有位于这个位置逻辑才是正确的
+                    final AlertDialog dialog = builder.show();
 
-                    Threshold.setText(mGamePadBitmap.setThresholdValue);
-                    builder.setPositiveButton("确定",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    mGamePadBitmap.setThresholdValue = Threshold.getText().toString();
-                                    //当前阈值;
-                                    tv_switch.setText("当前阈值："+mGamePadBitmap.setThresholdValue);
-                                }
-                            });
+                    final EditText et_Threshold = view.findViewById(R.id.edThreshold);
+                    et_Threshold.setText(mGamePadBitmap.setThresholdValue);
 
-                    builder.setNegativeButton("取消",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
+                    view.findViewById(R.id.btn_confirm).setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //确认
+                            //获取输入的阈值
+                            mGamePadBitmap.setThresholdValue = et_Threshold.getText().toString();
+                            //当前阈值;
 
-                                }
-                            });
-                    builder.show();
+                            tv_switch.setText("当前阈值:" + mGamePadBitmap.setThresholdValue);
+                            //关闭对话框
+                            dialog.dismiss();
+                        }
+                    });
+                    view.findViewById(R.id.btn_openNow).setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //立即启动+关闭对话框
+                            tv_switch.setText("开关状态：开");
+                            tv_switch.setTextColor(Color.parseColor("#66ff00"));
+                            dialog.dismiss();
+                        }
+                    });
+                    view.findViewById(R.id.btn_cancle).setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //取消+关闭对话框
+                            dialog.dismiss();
+                        }
+                    });
                 }
             }
         });
@@ -341,6 +350,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                     }
                 });
                 break;
+
             default:
                 break;
         }
@@ -363,6 +373,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                 mGamePadBitmap = new CBitmap(mBitmap, 200, 200);
                 mGamePadBitmap.Item_Attributes = flag;
                 mGamePadBitmap.itemName = datasave[flag-1][position].EngName;
+                mGamePadBitmap.itemCNName = datasave[flag-1][position].Name;
                 mCanvasView.addCanvasDrawable(mGamePadBitmap);
                 return true;
             }
