@@ -19,42 +19,14 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent">
-        <Button
-            android:id="@+id/btn_dataCollect"
-            android:text="数据采集模块"
-            android:textSize="20dp"
-            android:textColor="#ffffff"
-            android:layout_weight="1"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_width="39dp"
-            android:layout_height="wrap_content"
-            android:background="#0bcaf9" />
-        <Button
-            android:id="@+id/btn_switch"
-            android:text="开关控制模块"
-            android:textSize="20dp"
-            android:textColor="#ffffff"
-            android:layout_weight="1"
-            android:layout_marginBottom="5dp"
-            android:layout_width="39dp"
-            android:layout_height="wrap_content"
-            android:background="#0bcaf9" />
-        <Button
-            android:id="@+id/btn_function"
-            android:text="功能响应模块"
-            android:textSize="20dp"
-            android:textColor="#ffffff"
-            android:layout_weight="1"
-            android:layout_width="39dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:background="#0bcaf9" />
-    </LinearLayout>
+        <ListView
+            android:id="@+id/list"
+            android:visibility="visible"
+            android:layout_width="150dp"
+            android:layout_height="match_parent">
+        </ListView>
+
+
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -66,62 +38,85 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
+        <LinearLayout
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-        <ListView
-            android:id="@+id/list_data"
-            android:visibility="gone"
-            android:layout_width="140dp"
-            android:layout_height="match_parent">
-        </ListView>
+                <ImageView
+                    android:id="@+id/iv_datacollectrectangle"
+                    android:layout_width="128dp"
+                    android:layout_height="128dp" />
+                <TextView
+                    android:id="@+id/tv_dataCollectValue"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
 
-        <ListView
-            android:id="@+id/list_switch"
-            android:visibility="gone"
-            android:layout_width="140dp"
-            android:layout_height="match_parent">
-        </ListView>
+                <TextView
+                    android:id="@+id/tv_dataCollectQos"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
 
-        <ListView
-            android:id="@+id/list_function"
-            android:visibility="gone"
-            android:layout_width="140dp"
-            android:layout_height="match_parent">
-        </ListView>
+            <ImageView
+                android:id="@+id/iv_direction1"
+                android:layout_marginTop="15dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp" />
 
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/iv_function"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginTop="50dp"
-            android:layout_centerHorizontal="true" />
-        <ImageView
-            android:id="@+id/iv_rectangle1"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_below="@+id/iv_function"
-            android:layout_centerHorizontal="true" />
+                <ImageView
+                    android:id="@+id/iv_switchrectangle"
+                    android:layout_width="128dp"
+                    android:layout_height="128dp" />
+                <TextView
+                    android:id="@+id/tv_switchValue"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
 
-        <ImageView
-            android:id="@+id/iv_switch"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_below="@+id/iv_rectangle1"
-            android:layout_centerHorizontal="true" />
-        <ImageView
-            android:id="@+id/iv_rectangle2"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_below="@+id/iv_switch"
-            android:layout_centerHorizontal="true" />
-        <ImageView
-            android:id="@+id/iv_datacollect"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_below="@+id/iv_rectangle2"
-            android:layout_centerHorizontal="true" />
+                <TextView
+                    android:id="@+id/tv_switchQos"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
 
+            <ImageView
+                android:id="@+id/iv_direction2"
+                android:layout_marginTop="15dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_functionrectangle"
+                    android:layout_width="128dp"
+                    android:layout_height="128dp" />
+                <TextView
+                    android:id="@+id/tv_functionValue"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tv_functionQos"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/iv_trash"
@@ -160,32 +155,6 @@
             android:layout_alignParentEnd="true"
             android:layout_alignLeft="@+id/iv_zoomout"
             android:layout_alignStart="@+id/iv_zoomout" />
-
-        <TextView
-            android:id="@+id/tv_dataCollect"
-            android:textSize="15dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="323dp"
-            android:layout_marginLeft="205dp"/>
-
-        <TextView
-            android:id="@+id/tv_switch"
-            android:textSize="15dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="213dp"
-            android:layout_marginLeft="205dp"/>
-
-        <TextView
-            android:id="@+id/tv_funciton"
-            android:textSize="15dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="103dp"
-            android:layout_marginLeft="205dp"/>
-
-
     </RelativeLayout>
 
     </LinearLayout>

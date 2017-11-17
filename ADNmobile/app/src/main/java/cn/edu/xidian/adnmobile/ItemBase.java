@@ -8,12 +8,14 @@ public class ItemBase {
     public String Details = "";
     public int icon = 0;
     public String EngName = "";
+    public int itemFlag = 0;
 
-    public ItemBase(String Name,String Details,int icon,String EngName)
+    public ItemBase(String Name,String Details,int icon,String EngName,int itemFlag)
     {
         this.Name = Name;
         this.Details = Details;
         this.icon = icon;
         this.EngName = EngName;
+        this.itemFlag = itemFlag;
     }
 }

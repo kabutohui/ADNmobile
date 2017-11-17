@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -22,18 +21,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import cn.edu.xidian.adnmobile.view.CBitmap;
-import cn.edu.xidian.adnmobile.view.CDrawable;
 
 public class MainActivity extends AppCompatActivity implements OnClickListener{
 
     private Toolbar toolbar;
-    private Button btn_dataCollect,btn_switch,btn_function;
+
     private ImageView iv_trash,iv_zoomin,iv_zoomout,iv_reset,iv_function,iv_switch,iv_datacollect,iv_rectangle1,iv_rectangle2;
     private CanvasView mCanvasView;
-    private ListView lv_datacollect,lv_switch,lv_function;
-    private TextView tv_datacollect,tv_switch,tv_function;
+    private ListView listdata;
+    private TextView tv_datacollectValue,tv_switchValue,tv_functionValue,tv_datacollectQos,tv_switchQos,tv_functionQos;
     private Bitmap mBitmap;
-    private CDrawable mPutTrash,mPutIcon;
     private int Widget_Width,Widget_heigh;
 
     private String dataCollectName;
@@ -92,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                         public void onSuccess(String result) {
                             System.out.println("<<<<<<<<<<<<数据传输成功！Requrst = "+result);
                             //dataUpdate = new DataUpdate(MainActivity.this,tv_datacollect,tv_function,mCanvasView);
-                            new DataUpdate(MainActivity.this,tv_datacollect,tv_function,mCanvasView);
+                            new DataUpdate(MainActivity.this,tv_datacollectValue,tv_functionValue,mCanvasView);
                         }
                     }, new NetConnection.FailCallback() {
                         @Override
@@ -113,28 +110,28 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
 
     private void initView()
     {
-        tv_datacollect = (TextView) findViewById(R.id.tv_dataCollect);
-        tv_switch = (TextView) findViewById(R.id.tv_switch);
-        tv_function = (TextView) findViewById(R.id.tv_funciton);
-
-        btn_dataCollect = (Button) findViewById(R.id.btn_dataCollect);
-        btn_switch = (Button) findViewById(R.id.btn_switch);
-        btn_function = (Button) findViewById(R.id.btn_function);
+        //文字显示部分
+        tv_datacollectQos = (TextView) findViewById(R.id.tv_dataCollectQos);
+        tv_datacollectValue = (TextView) findViewById(R.id.tv_dataCollectValue);
+        tv_switchQos = (TextView) findViewById(R.id.tv_switchQos);
+        tv_switchValue = (TextView) findViewById(R.id.tv_switchValue);
+        tv_functionQos = (TextView) findViewById(R.id.tv_functionQos);
+        tv_functionValue = (TextView) findViewById(R.id.tv_functionValue);
+        //列表显示
+        listdata = (ListView) findViewById(R.id.list);
+        //画布
         mCanvasView = (CanvasView) findViewById(R.id.action_editor_canvas_test);
-        lv_datacollect = (ListView) findViewById(R.id.list_data);
-        lv_switch = (ListView) findViewById(R.id.list_switch);
-        lv_function = (ListView) findViewById(R.id.list_function);
+        //四个画布控件：放大/缩小/还原/删除
         iv_trash = (ImageView) findViewById(R.id.iv_trash);
         iv_reset = (ImageView) findViewById(R.id.iv_reset);
         iv_zoomin = (ImageView) findViewById(R.id.iv_zoomin);
         iv_zoomout = (ImageView) findViewById(R.id.iv_zoomout);
-
-
-        iv_function = (ImageView) findViewById(R.id.iv_function);
-        iv_rectangle1 = (ImageView) findViewById(R.id.iv_rectangle1);
-        iv_switch = (ImageView) findViewById(R.id.iv_switch);
-        iv_rectangle2 = (ImageView) findViewById(R.id.iv_rectangle2);
-        iv_datacollect = (ImageView) findViewById(R.id.iv_datacollect);
+        //中心功能区5个图标显示
+        iv_function = (ImageView) findViewById(R.id.iv_functionrectangle);
+        iv_rectangle1 = (ImageView) findViewById(R.id.iv_direction1);
+        iv_switch = (ImageView) findViewById(R.id.iv_switchrectangle);
+        iv_rectangle2 = (ImageView) findViewById(R.id.iv_direction2);
+        iv_datacollect = (ImageView) findViewById(R.id.iv_datacollectrectangle);
 
     }
 
@@ -154,41 +151,28 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
 
 
         //放置工作区
-        iv_function.setImageResource(R.drawable.rectangle);
-        iv_rectangle1.setImageResource(R.drawable.direction_up);
-        iv_switch.setImageResource(R.drawable.rectangle);
-        iv_rectangle2.setImageResource(R.drawable.direction_up);
-        iv_datacollect.setImageResource(R.drawable.rectangle);
+        iv_function.setImageResource(R.drawable.function_rectangle);
+        iv_rectangle1.setImageResource(R.drawable.direction_right);
+        iv_switch.setImageResource(R.drawable.switch_rectangle);
+        iv_rectangle2.setImageResource(R.drawable.direction_right);
+        iv_datacollect.setImageResource(R.drawable.datacollect_rectangle);
     }
 
     private void initEvent()
     {
-        btn_dataCollect.setOnClickListener(this);
-        btn_switch.setOnClickListener(this);
-        btn_function.setOnClickListener(this);
+        setIcon2List(listdata);
         iv_reset.setOnClickListener(this);
         iv_zoomin.setOnClickListener(this);
         iv_zoomout.setOnClickListener(this);
 
-        mCanvasView.setOnCanvasClickListener(new CanvasView.onCanvasClickListener() {
-            @Override
-            public void onCanvasClick(int x, int y) {
-                //点击控件列表外的部分以关闭控件列表
-                if (x > 130) {
-                    lv_function.setVisibility(View.GONE);
-                    lv_switch.setVisibility(View.GONE);
-                    lv_datacollect.setVisibility(View.GONE);
-                }
-            }
-        });
 
         mCanvasView.setOnWidgetMoveListener(new CanvasView.onWidgetMoveListener() {
             @Override
             public void onWidgetMove(int index, int x, int y) {
-                Toast.makeText(MainActivity.this, "控件为：" + index + "拖动的X坐标为：" + x + "拖动的X坐标为：" + y + "[" + Widget_Width + "," + Widget_heigh + "]", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "控件为：" + index + "拖动的X坐标为：" + x + "拖动的Y坐标为：" + y + "[" + Widget_Width + "," + Widget_heigh + "]", Toast.LENGTH_SHORT).show();
                 mGamePadBitmap = (CBitmap) (mCanvasView.mDrawableList.get(index));
                 //判断是否进入删除区
-                if ((Widget_Width - 200 <= x && x <= Widget_Width) && (Widget_heigh - 200 <= y && y <= Widget_heigh)) {
+                if ((Widget_Width - 400 <= x && x <= Widget_Width) && (Widget_heigh - 400 <= y && y <= Widget_heigh)) {
                     //更换trash图标,trash图标切换为打开状态
                     iv_trash.setImageResource(R.drawable.blockly_trash_open);
                     //将标志位设置为true
@@ -206,7 +190,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         mCanvasView.setOnWidgetLongPressListener(new CanvasView.onWidgetLongPressListener() {
             @Override
             public void onWidgetLongPress(int index, int x, int y) {
-                Toast.makeText(MainActivity.this, "长按了控件:" + index, Toast.LENGTH_SHORT).show();
                 mGamePadBitmap = (CBitmap) (mCanvasView.mDrawableList.get(index));
                 if (mGamePadBitmap.Item_Attributes == ActionWidget.switch_flag) {
                     final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -229,8 +212,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                             //获取输入的阈值
                             mGamePadBitmap.setThresholdValue = et_Threshold.getText().toString();
                             //当前阈值;
-
-                            tv_switch.setText("当前阈值:" + mGamePadBitmap.setThresholdValue);
+                            tv_switchValue.setText("当前阈值:" + mGamePadBitmap.setThresholdValue);
                             //关闭对话框
                             dialog.dismiss();
                         }
@@ -239,8 +221,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                         @Override
                         public void onClick(View v) {
                             //立即启动+关闭对话框
-                            tv_switch.setText("开关状态：开");
-                            tv_switch.setTextColor(Color.parseColor("#66ff00"));
+                            tv_switchValue.setText("开关状态：开");
+                            tv_switchValue.setTextColor(Color.parseColor("#66ff00"));
                             dialog.dismiss();
                         }
                     });
@@ -258,8 +240,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         mCanvasView.setOnWidgetClickListener(new CanvasView.onWidgetClickListener() {
             @Override
             public void onWidgetClick(int index, int x, int y) {
-                Toast.makeText(MainActivity.this, "点击了控件:" + index, Toast.LENGTH_SHORT).show();
-
 
             }
         });
@@ -277,24 +257,24 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                 //判断图标是否出现在指定的功能区
                 if (index >= 0) {
                     if ((mGamePadBitmap.Item_Attributes == ActionWidget.function_flag)) {
-                        double abs = Math.sqrt((x - ActionWidget.functionX) * (x - ActionWidget.functionX) + (y - ActionWidget.functionY1) * (y - ActionWidget.functionY1));
+                        double abs = Math.sqrt((y - ActionWidget.functionX) * (y - ActionWidget.functionX) + (x - ActionWidget.functionY3) * (x - ActionWidget.functionY3));
                         if (abs < ActionWidget.function_reius) {
-                            mGamePadBitmap.setXcoords(ActionWidget.functionX);
-                            mGamePadBitmap.setYcoords(ActionWidget.functionY1);
+                            mGamePadBitmap.setXcoords(ActionWidget.functionY3);
+                            mGamePadBitmap.setYcoords(ActionWidget.functionX);
                         }
                     }
                     if ((mGamePadBitmap.Item_Attributes == ActionWidget.switch_flag)) {
-                        double abs = Math.sqrt((x - ActionWidget.functionX) * (x - ActionWidget.functionX) + (y - ActionWidget.functionY2) * (y - ActionWidget.functionY2));
+                        double abs = Math.sqrt((y - ActionWidget.functionX) * (y - ActionWidget.functionX) + (x - ActionWidget.functionY2) * (x - ActionWidget.functionY2));
                         if (abs < ActionWidget.function_reius) {
-                            mGamePadBitmap.setXcoords(ActionWidget.functionX);
-                            mGamePadBitmap.setYcoords(ActionWidget.functionY2);
+                            mGamePadBitmap.setXcoords(ActionWidget.functionY2);
+                            mGamePadBitmap.setYcoords(ActionWidget.functionX);
                         }
                     }
                     if ((mGamePadBitmap.Item_Attributes == ActionWidget.datacollect_flag)) {
-                        double abs = Math.sqrt((x - ActionWidget.functionX) * (x - ActionWidget.functionX) + (y - ActionWidget.functionY3) * (y - ActionWidget.functionY3));
+                        double abs = Math.sqrt((y - ActionWidget.functionX) * (y - ActionWidget.functionX) + (x - ActionWidget.functionY1) * (x - ActionWidget.functionY1));
                         if (abs < ActionWidget.function_reius) {
-                            mGamePadBitmap.setXcoords(ActionWidget.functionX);
-                            mGamePadBitmap.setYcoords(ActionWidget.functionY3);
+                            mGamePadBitmap.setXcoords(ActionWidget.functionY1);
+                            mGamePadBitmap.setYcoords(ActionWidget.functionX);
                         }
                     }
 
@@ -308,21 +288,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     public void onClick(View v) {
         switch (v.getId())
         {
-            case R.id.btn_dataCollect:
-                lv_function.setVisibility(View.GONE);
-                lv_switch.setVisibility(View.GONE);
-                setIcon2List(ActionWidget.datacollect_flag,lv_datacollect);
-                break;
-            case R.id.btn_switch:
-                lv_datacollect.setVisibility(View.GONE);
-                lv_function.setVisibility(View.GONE);
-                setIcon2List(ActionWidget.switch_flag,lv_switch);
-                break;
-            case R.id.btn_function:
-                lv_datacollect.setVisibility(View.GONE);
-                lv_switch.setVisibility(View.GONE);
-                setIcon2List(ActionWidget.function_flag,lv_function);
-                break;
             case R.id.iv_reset:
                 iv_reset.setOnClickListener(new OnClickListener() {
                     @Override
@@ -350,30 +315,27 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                     }
                 });
                 break;
-
             default:
                 break;
         }
     }
 
-    private void setIcon2List(final int flag, final ListView listView)
+    private void setIcon2List(final ListView listView)
     {
         listView.setVisibility(View.VISIBLE);
-        ListItems listItems = new ListItems(this,listView,flag);
+        ListItems listItems = new ListItems(this,listView);
         listItems.listshow();
-        final ItemBase[][] datasave = listItems.getDatasave();
+        final ItemBase[] datasave = listItems.getDatasave();
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(MainActivity.this, "you clicked the" + position, Toast.LENGTH_SHORT).show();
-                mCanvasView.setVisibility(View.VISIBLE);
-                listView.setVisibility(View.GONE);
-                mBitmap = BitmapFactory.decodeResource(getResources(), datasave[flag-1][position].icon);
+                mBitmap = BitmapFactory.decodeResource(getResources(), datasave[position].icon);
                 mGamePadBitmap = new CBitmap(mBitmap, 200, 200);
-                mGamePadBitmap.Item_Attributes = flag;
-                mGamePadBitmap.itemName = datasave[flag-1][position].EngName;
-                mGamePadBitmap.itemCNName = datasave[flag-1][position].Name;
+                mGamePadBitmap.Item_Attributes = datasave[position].itemFlag;
+                mGamePadBitmap.itemName = datasave[position].EngName;
+                mGamePadBitmap.itemCNName = datasave[position].Name;
                 mCanvasView.addCanvasDrawable(mGamePadBitmap);
                 return true;
             }

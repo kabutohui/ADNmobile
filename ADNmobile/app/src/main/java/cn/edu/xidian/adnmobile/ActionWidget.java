@@ -31,14 +31,23 @@ public class ActionWidget  implements CDrawable {
     public final static int function_flag = 3;
 
 
-    //function area X, Y
-    public final static int functionX = 320;
-    public final static int functionY1 = 185;
-    public final static int functionY2 = 400;
-    public final static int functionY3 = 625;
+//    //function area X, Y[手机]
+//    public final static int functionX = 320;
+//    public final static int functionY1 = 185;
+//    public final static int functionY2 = 400;
+//    public final static int functionY3 = 625;
 
-    //function area radius
-    public final static int function_reius = 100;
+//    //function area radius[手机]
+//    public final static int function_reius = 100;
+
+    //function area X, Y[平板]
+    public final static int functionX = 290;
+    public final static int functionY1 = 230;
+    public final static int functionY2 = 535;
+    public final static int functionY3 = 835;
+
+    //function area radius[平板]
+    public final static int function_reius = 130;
 
 
 

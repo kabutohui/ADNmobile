@@ -252,16 +252,11 @@ public class CanvasView extends FabricView {
                 moveY = 0;
                 moveX1 = 0;
                 moveY1 = 0;
-
-                if (monCanvasClickListener != null) {
-                    monCanvasClickListener.onCanvasClick((int) DownX, (int) DownY);
-                }
-
             }
             break;
             case MotionEvent.ACTION_MOVE: {
-                moveX = Math.abs(event.getX() - DownX);//X轴距离
-                moveY = Math.abs(event.getY() - DownY);//y轴距离
+                moveX += Math.abs(event.getX() - DownX);//X轴距离
+                moveY += Math.abs(event.getY() - DownY);//y轴距离
                 moveX1 = event.getX();
                 moveY1 = event.getY();
                 if (moveX == 0 && moveY == 0) {
@@ -269,7 +264,7 @@ public class CanvasView extends FabricView {
                     long DValueTime = mMoveTime - mDownTime;
                     System.out.println("long touch before "+DValueTime+">>>>>>>>>>>>>>>>>>>");
                     if(getDown2Widget() != -1) {
-                        if (DValueTime > 20) {
+                        if (DValueTime > 500) {
                             if (mOnWidgetLongPressListener != null) {
                                 System.out.println("long touch item "+getDown2Widget());
                                 mOnWidgetLongPressListener.onWidgetLongPress(mDown2Widget, (int) moveX1, (int) moveY1);
