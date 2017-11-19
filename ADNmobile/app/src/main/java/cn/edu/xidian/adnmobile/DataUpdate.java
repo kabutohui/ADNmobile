@@ -19,7 +19,7 @@ public class DataUpdate {
     private int itemID;
     private CanvasView mCanvasView;
     private CBitmap mGamePadBitmap;//临时变量
-
+    private boolean ThreadFlag = false;
 
     public DataUpdate (Context context,TextView tv_datacollect,TextView tv_function,CanvasView mCanvasView){
         this.context = context;
@@ -28,7 +28,7 @@ public class DataUpdate {
         this.mCanvasView = mCanvasView;
 
         this.myThread = new MyThread();
-        ActionWidget.ThreadFlag = true;
+        ThreadFlag = true;
         this.myThread.start();
 
         for(int i = 0;i < mCanvasView.mDrawableList.size();i++)
@@ -49,27 +49,39 @@ public class DataUpdate {
         }
     }
 
-    public static void setMyThread(MyThread myThread) {
 
+    public void setmCanvasView(CanvasView mCanvasView) {
+        this.mCanvasView = mCanvasView;
+        for(int i = 0;i < mCanvasView.mDrawableList.size();i++)
+        {
+            mGamePadBitmap = (CBitmap) (mCanvasView.mDrawableList.get(i));
+            switch (mGamePadBitmap.Item_Attributes)
+            {
+                case ActionWidget.datacollect_flag:
+                    datacollectName = mGamePadBitmap.itemCNName;
+                    break;
+                case ActionWidget.function_flag:
+                    functionName = mGamePadBitmap.itemCNName;
+                    break;
+                case ActionWidget.switch_flag:
+                    Threshold = mGamePadBitmap.setThresholdValue;
+                    break;
+            }
+        }
     }
 
-    public void ThreadStart()
-    {
-
-        ActionWidget.ThreadFlag = true;
+    public void Threadstart(){
         this.myThread.start();
     }
 
-    public void ThreadDistroy()
-    {
-        ActionWidget.ThreadFlag = false;
-        this.myThread.destroy();
+    public void setThreadFlag(boolean threadFlag) {
+        ThreadFlag = threadFlag;
     }
 
     private class MyThread extends Thread {
         @Override
         public void run() {
-            while (ActionWidget.ThreadFlag) {
+            while (ThreadFlag) {
                 System.out.println("发送获取传感器数据请求");
                 try {
                     // 每个500毫秒向服务器发送一次请求
@@ -84,7 +96,7 @@ public class DataUpdate {
                         JsonDataPakage jsonDataPakage = new JsonDataPakage();
                         System.out.println(result);
                         tv_datacollect.setText(datacollectName+":"+jsonDataPakage.JsonParse(result));
-                        if(Integer.parseInt(Threshold) <= 26)
+                        if (Float.parseFloat(Threshold) <=  Float.parseFloat(jsonDataPakage.JsonParse(result)))
                         {
                             tv_function.setText(functionName+":"+"开");
                             tv_function.setTextColor(Color.parseColor("#66ff00"));//打开为绿色

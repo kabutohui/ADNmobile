@@ -33,9 +33,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     private Bitmap mBitmap;
     private int Widget_Width,Widget_heigh;
 
-    private String dataCollectName;
-
-    private boolean IsLongPress = false;
+    //更新数据
+    private DataUpdate dataUpdate = null;
     //是否进入删除区标志
     private boolean IsDeleteFlag = false;
 
@@ -70,15 +69,19 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add_line:
-                Toast.makeText(this, "添加连线", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "清除", Toast.LENGTH_SHORT).show();
+                MainActivity.this.finish();
+                MainActivity.this.startActivity(getIntent());
                 break;
             case R.id.create:
                 if(mCanvasView.mDrawableList.size() >= 4)
                     Toast.makeText(this, "存在多余控件，生成模块失败！", Toast.LENGTH_LONG).show();
+                else if(mCanvasView.mDrawableList.size() < 2){
+                    Toast.makeText(this, "控件不足，生成模块失败！", Toast.LENGTH_LONG).show();
+                }
                 else
                 {
                     Toast.makeText(this, "生成模块成功！", Toast.LENGTH_LONG).show();
-
                     //关闭前一个线程
                     ActionWidget.ThreadFlag = false;
 
@@ -88,8 +91,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                         @Override
                         public void onSuccess(String result) {
                             System.out.println("<<<<<<<<<<<<数据传输成功！Requrst = "+result);
-                            //dataUpdate = new DataUpdate(MainActivity.this,tv_datacollect,tv_function,mCanvasView);
-                            new DataUpdate(MainActivity.this,tv_datacollectValue,tv_functionValue,mCanvasView);
+                            if(dataUpdate == null){
+                               dataUpdate = new DataUpdate(MainActivity.this,tv_datacollectValue,tv_functionValue,mCanvasView);
+                            }else {
+                                System.out.println("hehehehhehehehehehheheheh");
+                                dataUpdate.setmCanvasView(mCanvasView);
+                                dataUpdate.setThreadFlag(true);
+                                dataUpdate.Threadstart();
+                            }
                         }
                     }, new NetConnection.FailCallback() {
                         @Override
@@ -190,56 +199,71 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         mCanvasView.setOnWidgetLongPressListener(new CanvasView.onWidgetLongPressListener() {
             @Override
             public void onWidgetLongPress(int index, int x, int y) {
-                mGamePadBitmap = (CBitmap) (mCanvasView.mDrawableList.get(index));
-                if (mGamePadBitmap.Item_Attributes == ActionWidget.switch_flag) {
-                    final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    // 通过LayoutInflater来加载一个xml的布局文件作为一个View对象
-                    View view = LayoutInflater.from(MainActivity.this).inflate(
-                            R.layout.popup_view, null);
-                    // 设置我们自己定义的布局文件作为弹出框的Content
-                    builder.setView(view);
 
-                    //这个位置十分重要，只有位于这个位置逻辑才是正确的
-                    final AlertDialog dialog = builder.show();
-
-                    final EditText et_Threshold = view.findViewById(R.id.edThreshold);
-                    et_Threshold.setText(mGamePadBitmap.setThresholdValue);
-
-                    view.findViewById(R.id.btn_confirm).setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //确认
-                            //获取输入的阈值
-                            mGamePadBitmap.setThresholdValue = et_Threshold.getText().toString();
-                            //当前阈值;
-                            tv_switchValue.setText("当前阈值:" + mGamePadBitmap.setThresholdValue);
-                            //关闭对话框
-                            dialog.dismiss();
-                        }
-                    });
-                    view.findViewById(R.id.btn_openNow).setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //立即启动+关闭对话框
-                            tv_switchValue.setText("开关状态：开");
-                            tv_switchValue.setTextColor(Color.parseColor("#66ff00"));
-                            dialog.dismiss();
-                        }
-                    });
-                    view.findViewById(R.id.btn_cancle).setOnClickListener(new OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            //取消+关闭对话框
-                            dialog.dismiss();
-                        }
-                    });
-                }
             }
         });
 
         mCanvasView.setOnWidgetClickListener(new CanvasView.onWidgetClickListener() {
             @Override
             public void onWidgetClick(int index, int x, int y) {
+
+                mGamePadBitmap = (CBitmap) (mCanvasView.mDrawableList.get(index));
+                if (mGamePadBitmap.Item_Attributes == ActionWidget.switch_flag) {
+                    if (ActionWidget.clickCount == 0) {
+                        ActionWidget.firstTime = System.currentTimeMillis();
+                        ActionWidget.clickCount++;
+                    } else {
+                        ActionWidget.secondTime = System.currentTimeMillis();
+                        System.out .println("second:"+ ActionWidget.secondTime+"\n" +
+                                "first:"+ ActionWidget.firstTime + "\n"+
+                                "second-first="+Math.abs(ActionWidget.secondTime-ActionWidget.firstTime)+"点击了开关！！！");
+                        if (Math.abs(ActionWidget.secondTime - ActionWidget.firstTime) < 1500) {
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                            // 通过LayoutInflater来加载一个xml的布局文件作为一个View对象
+                            View view = LayoutInflater.from(MainActivity.this).inflate(
+                                    R.layout.popup_view, null);
+                            // 设置我们自己定义的布局文件作为弹出框的Content
+                            builder.setView(view);
+
+                            //这个位置十分重要，只有位于这个位置逻辑才是正确的
+                            final AlertDialog dialog = builder.show();
+
+                            final EditText et_Threshold = view.findViewById(R.id.edThreshold);
+                            et_Threshold.setText(mGamePadBitmap.setThresholdValue);
+
+                            view.findViewById(R.id.btn_confirm).setOnClickListener(new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    //确认
+                                    //获取输入的阈值
+                                    mGamePadBitmap.setThresholdValue = et_Threshold.getText().toString();
+                                    //当前阈值;
+                                    tv_switchValue.setText("当前阈值:" + mGamePadBitmap.setThresholdValue);
+                                    //关闭对话框
+                                    dialog.dismiss();
+                                }
+                            });
+                            view.findViewById(R.id.btn_openNow).setOnClickListener(new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    //立即启动+关闭对话框
+                                    tv_switchValue.setText("开关状态：开");
+                                    tv_switchValue.setTextColor(Color.parseColor("#66ff00"));
+                                    dataUpdate.setThreadFlag(false);
+                                    dialog.dismiss();
+                                }
+                            });
+                            view.findViewById(R.id.btn_cancle).setOnClickListener(new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    //取消+关闭对话框
+                                    dialog.dismiss();
+                                }
+                            });
+                        }
+                        ActionWidget.clickCount = 0;
+                    }
+                }
 
             }
         });

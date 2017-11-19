@@ -264,7 +264,7 @@ public class CanvasView extends FabricView {
                     long DValueTime = mMoveTime - mDownTime;
                     System.out.println("long touch before "+DValueTime+">>>>>>>>>>>>>>>>>>>");
                     if(getDown2Widget() != -1) {
-                        if (DValueTime > 500) {
+                        if (DValueTime > 200) {
                             if (mOnWidgetLongPressListener != null) {
                                 System.out.println("long touch item "+getDown2Widget());
                                 mOnWidgetLongPressListener.onWidgetLongPress(mDown2Widget, (int) moveX1, (int) moveY1);

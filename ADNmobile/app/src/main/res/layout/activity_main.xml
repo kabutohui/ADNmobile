@@ -22,7 +22,7 @@
         <ListView
             android:id="@+id/list"
             android:visibility="visible"
-            android:layout_width="150dp"
+            android:layout_width="160dp"
             android:layout_height="match_parent">
         </ListView>
 
@@ -56,11 +56,13 @@
                     android:layout_height="128dp" />
                 <TextView
                     android:id="@+id/tv_dataCollectValue"
+                    android:gravity="center"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/tv_dataCollectQos"
+                    android:gravity="center"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -82,11 +84,13 @@
                     android:layout_height="128dp" />
                 <TextView
                     android:id="@+id/tv_switchValue"
+                    android:gravity="center"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/tv_switchQos"
+                    android:gravity="center"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -108,11 +112,13 @@
                     android:layout_height="128dp" />
                 <TextView
                     android:id="@+id/tv_functionValue"
+                    android:gravity="center"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/tv_functionQos"
+                    android:gravity="center"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>

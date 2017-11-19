@@ -5,7 +5,7 @@
 
     <item
         android:id = "@+id/add_line"
-        android:title= "连线"/>
+        android:title= "清除"/>
     <item
         android:id="@+id/create"
         android:title="生成"/>

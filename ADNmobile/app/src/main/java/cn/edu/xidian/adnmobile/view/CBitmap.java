@@ -18,7 +18,7 @@ public class CBitmap implements CDrawable {
     public String itemName;
     public String itemCNName;
     //设置switch控件阈值
-    public String setThresholdValue  = "null";
+    public String setThresholdValue  = "0";
 
 
 

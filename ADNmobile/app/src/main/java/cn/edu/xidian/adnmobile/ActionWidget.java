@@ -44,12 +44,15 @@ public class ActionWidget  implements CDrawable {
     public final static int functionX = 290;
     public final static int functionY1 = 230;
     public final static int functionY2 = 535;
-    public final static int functionY3 = 835;
+    public final static int functionY3 = 840;
 
     //function area radius[平板]
     public final static int function_reius = 130;
 
-
+    //存储敲击开关的时间
+    public  static long firstTime = 0;
+    public  static long secondTime = 60000;
+    public  static int clickCount = 0;
 
     public int actionType;
 
