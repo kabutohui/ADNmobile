@@ -147,56 +147,6 @@ public class CanvasView extends FabricView {
         return true;
     }
 
-    public void sortCanvasDrawable() {
-        getScreenWidthAndHight();
-
-        int fristActionX = WIDGET_GAP;
-        int fristActionY = WIDGET_GAP;
-        int fristActionX1 = mWidth / SCREEN_SLICE + WIDGET_GAP;
-        int fristActionY1 = WIDGET_GAP;
-        int fristActionX2 = (mWidth / SCREEN_SLICE) * 2 + WIDGET_GAP;
-        int fristActionY2 = WIDGET_GAP;
-        for (int i = 0; i < mDrawableList.size(); i++) {
-            if (mDrawableList.get(i) instanceof ActionWidget) {
-                if (((ActionWidget) mDrawableList.get(i)).getActionType() == ActionWidget.ACTION_FRIST) {
-                    if (fristActionX < mWidth / SCREEN_SLICE) {
-                        mDrawableList.get(i).setXcoords(fristActionX);
-                        mDrawableList.get(i).setYcoords(fristActionY);
-                    } else {
-                        fristActionX = WIDGET_GAP;
-                        fristActionY = fristActionY + WIDGET_GAP;
-                        mDrawableList.get(i).setXcoords(fristActionX);
-                        mDrawableList.get(i).setYcoords(fristActionY);
-                    }
-                    fristActionX = fristActionX + WIDGET_GAP;
-                } else if (((ActionWidget) mDrawableList.get(i)).getActionType() == ActionWidget.ACTION_SCEND) {
-                    if (fristActionX1 < (mWidth / SCREEN_SLICE) * 2) {
-                        mDrawableList.get(i).setXcoords(fristActionX1);
-                        mDrawableList.get(i).setYcoords(fristActionY1);
-                    } else {
-                        fristActionX1 = mWidth / SCREEN_SLICE + WIDGET_GAP;
-                        fristActionY1 = fristActionY1 + WIDGET_GAP;
-                        mDrawableList.get(i).setXcoords(fristActionX1);
-                        mDrawableList.get(i).setYcoords(fristActionY1);
-                    }
-                    fristActionX1 = fristActionX1 + WIDGET_GAP;
-                } else if (((ActionWidget) mDrawableList.get(i)).getActionType() == ActionWidget.ACTION_THRIST) {
-                    if (fristActionX2 < mWidth) {
-                        mDrawableList.get(i).setXcoords(fristActionX2);
-                        mDrawableList.get(i).setYcoords(fristActionY2);
-                    } else {
-                        fristActionX2 = (mWidth / SCREEN_SLICE) * 2 + WIDGET_GAP;
-                        fristActionY2 = fristActionY2 + WIDGET_GAP;
-                        mDrawableList.get(i).setXcoords(fristActionX2);
-                        mDrawableList.get(i).setYcoords(fristActionY2);
-                    }
-                    fristActionX2 = fristActionX2 + WIDGET_GAP;
-                }
-            }
-
-        }
-        invalidate();
-    }
 
     private void getScreenWidthAndHight() {
         WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);

@@ -70,8 +70,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         switch (item.getItemId()) {
             case R.id.add_line:
                 Toast.makeText(this, "清除", Toast.LENGTH_SHORT).show();
-                MainActivity.this.finish();
-                MainActivity.this.startActivity(getIntent());
+                if(dataUpdate != null){
+                    dataUpdate.setThreadFlag(false);
+                }
+                mCanvasView.cleanPager();
                 break;
             case R.id.create:
                 if(mCanvasView.mDrawableList.size() >= 4)
@@ -82,8 +84,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                 else
                 {
                     Toast.makeText(this, "生成模块成功！", Toast.LENGTH_LONG).show();
-                    //关闭前一个线程
-                    ActionWidget.ThreadFlag = false;
 
                     JsonDataPakage jsonDataPakage = new JsonDataPakage(mCanvasView.mDrawableList);
 
@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                             if(dataUpdate == null){
                                dataUpdate = new DataUpdate(MainActivity.this,tv_datacollectValue,tv_functionValue,mCanvasView);
                             }else {
-                                System.out.println("hehehehhehehehehehheheheh");
                                 dataUpdate.setmCanvasView(mCanvasView);
                                 dataUpdate.setThreadFlag(true);
                                 dataUpdate.Threadstart();
@@ -191,8 +190,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                     iv_trash.setImageResource(R.drawable.blockly_trash);
                     IsDeleteFlag = false;
                 }
-
-
             }
         });
 
