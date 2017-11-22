@@ -22,7 +22,7 @@ public class ListItems {
             new ItemBase("时钟","获取当前的时间",R.drawable.datacollect_clock,"Clock",ActionWidget.datacollect_flag),
             new ItemBase( "环境湿度","获取环境当前的湿度",R.drawable.datacollect_humidity,"Humidity",ActionWidget.datacollect_flag),
             new ItemBase("光照强度","获取环境当前的光线强度",R.drawable.datacollect_lightsensor,"Light_sensitive",ActionWidget.datacollect_flag),
-            new ItemBase("环境温度","获取环境当前的温度",R.drawable.datacollect_temperature,"Temperature",ActionWidget.datacollect_flag),
+            new ItemBase("环境温度","获取环境当前的温度",R.drawable.datacollect_temperature,"dht101",ActionWidget.datacollect_flag),
             new ItemBase("土壤湿度","获取土壤湿度",R.drawable.datacollect_soilwet,"Soilwet",ActionWidget.datacollect_flag),
             new ItemBase("水深传感器","获取当前水深",R.drawable.datacollect_waterdeep,"Waterdeep",ActionWidget.datacollect_flag),
             //switch

@@ -41,10 +41,10 @@ public class ActionWidget  implements CDrawable {
 //    public final static int function_reius = 100;
 
     //function area X, Y[平板]
-    public final static int functionX = 290;
+    public final static int functionX = 305;
     public final static int functionY1 = 230;
     public final static int functionY2 = 535;
-    public final static int functionY3 = 840;
+    public final static int functionY3 = 835;
 
     //function area radius[平板]
     public final static int function_reius = 130;
@@ -58,7 +58,8 @@ public class ActionWidget  implements CDrawable {
 
     //server url
     public static final String SERVER_URL_POST = "http://116.196.101.27:36666/todo/api/v1.0/run/";
-    public static final String SERVER_URL_GET = "http://116.196.101.27:36666/todo/api/v1.0/value/12";
+    public static final String SERVER_URL_GET = "http://116.196.101.27:36666/todo/api/v1.0/value/";
+    public static final String SERVER_URL_STOP = "http://116.196.101.27:36666/todo/api/v1.0/run/";//停止运行
 
 
     //线程flag

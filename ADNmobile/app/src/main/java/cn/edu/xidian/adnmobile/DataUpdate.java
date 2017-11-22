@@ -14,7 +14,7 @@ public class DataUpdate {
     private Context context;
     private static MyThread myThread;
     private TextView tv_datacollect,tv_function;
-    private String datacollectName,functionName;
+    private String datacollectName,functionName,datacollectEnName;
     private String Threshold; //获取设置的阈值
     private int itemID;
     private CanvasView mCanvasView;
@@ -38,6 +38,7 @@ public class DataUpdate {
             {
                 case ActionWidget.datacollect_flag:
                     datacollectName = mGamePadBitmap.itemCNName;
+                    datacollectEnName= mGamePadBitmap.itemName;
                     break;
                 case ActionWidget.function_flag:
                     functionName = mGamePadBitmap.itemCNName;
@@ -90,7 +91,7 @@ public class DataUpdate {
                     e.printStackTrace();
                 }
                 //下面写请求服务器的代码
-                new NetConnection(ActionWidget.SERVER_URL_GET, HttpMethod.GET, new NetConnection.SuccessCallback() {
+                new NetConnection(ActionWidget.SERVER_URL_GET + datacollectEnName, HttpMethod.GET, new NetConnection.SuccessCallback() {
                     @Override
                     public void onSuccess(String result) {
                         JsonDataPakage jsonDataPakage = new JsonDataPakage();

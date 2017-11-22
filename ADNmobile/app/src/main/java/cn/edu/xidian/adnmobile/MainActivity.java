@@ -44,9 +44,13 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);//实现全屏
+
         setContentView(R.layout.activity_main);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("西安电子科技大学-ADN演示平台");
         toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
@@ -84,33 +88,19 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                 else
                 {
                     Toast.makeText(this, "生成模块成功！", Toast.LENGTH_LONG).show();
-
-                    JsonDataPakage jsonDataPakage = new JsonDataPakage(mCanvasView.mDrawableList);
-
-                    new NetConnection(ActionWidget.SERVER_URL_POST, HttpMethod.POST, new NetConnection.SuccessCallback() {
-                        @Override
-                        public void onSuccess(String result) {
-                            System.out.println("<<<<<<<<<<<<数据传输成功！Requrst = "+result);
-                            if(dataUpdate == null){
-                               dataUpdate = new DataUpdate(MainActivity.this,tv_datacollectValue,tv_functionValue,mCanvasView);
-                            }else {
-                                dataUpdate.setmCanvasView(mCanvasView);
-                                dataUpdate.setThreadFlag(true);
-                                dataUpdate.Threadstart();
-                            }
-                        }
-                    }, new NetConnection.FailCallback() {
-                        @Override
-                        public void onFail() {
-                            System.out.println("<<<<<<<<<<<<数据传输失败！");
-                        }
-                    },"test",jsonDataPakage.JsonPackage());
-
+                    //发送数据
+                    JsonPakageandSendMsg(ActionWidget.SERVER_URL_POST,"data");
                 }
-
                 break;
             case R.id.upload:
-                Toast.makeText(this, "上传模块", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "停止运行", Toast.LENGTH_SHORT).show();
+                if(dataUpdate != null) {
+                    dataUpdate.setThreadFlag(false);
+                }
+                JsonPakageandSendMsg(ActionWidget.SERVER_URL_STOP,"stop");
+                break;
+            case R.id.about:
+                Toast.makeText(this, "西安电子科技大学-ADN团队", Toast.LENGTH_LONG).show();
                 break;
         }
         return true;
@@ -211,9 +201,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                         ActionWidget.clickCount++;
                     } else {
                         ActionWidget.secondTime = System.currentTimeMillis();
-                        System.out .println("second:"+ ActionWidget.secondTime+"\n" +
-                                "first:"+ ActionWidget.firstTime + "\n"+
-                                "second-first="+Math.abs(ActionWidget.secondTime-ActionWidget.firstTime)+"点击了开关！！！");
+                        System.out.println("second:" + ActionWidget.secondTime + "\n" +
+                                "first:" + ActionWidget.firstTime + "\n" +
+                                "second-first=" + Math.abs(ActionWidget.secondTime - ActionWidget.firstTime) + "点击了开关！！！");
                         if (Math.abs(ActionWidget.secondTime - ActionWidget.firstTime) < 1500) {
                             final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                             // 通过LayoutInflater来加载一个xml的布局文件作为一个View对象
@@ -246,7 +236,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                                     //立即启动+关闭对话框
                                     tv_switchValue.setText("开关状态：开");
                                     tv_switchValue.setTextColor(Color.parseColor("#66ff00"));
-                                    dataUpdate.setThreadFlag(false);
+                                    if (dataUpdate != null) {
+                                        dataUpdate.setThreadFlag(false);
+                                    }
+                                    JsonPakageandSendMsg(ActionWidget.SERVER_URL_POST, "immediate");
                                     dialog.dismiss();
                                 }
                             });
@@ -353,7 +346,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(MainActivity.this, "you clicked the" + position, Toast.LENGTH_SHORT).show();
                 mBitmap = BitmapFactory.decodeResource(getResources(), datasave[position].icon);
-                mGamePadBitmap = new CBitmap(mBitmap, 200, 200);
+                mGamePadBitmap = new CBitmap(mBitmap, 100, 130);
                 mGamePadBitmap.Item_Attributes = datasave[position].itemFlag;
                 mGamePadBitmap.itemName = datasave[position].EngName;
                 mGamePadBitmap.itemCNName = datasave[position].Name;
@@ -369,5 +362,37 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         WindowManager wm = this.getWindowManager();
         Widget_Width = wm.getDefaultDisplay().getWidth();
         Widget_heigh = wm.getDefaultDisplay().getHeight();
+    }
+
+    //打包和发送数据
+    private void JsonPakageandSendMsg(String Url, final String dataCategory){
+        JsonDataPakage jsonDataPakage = new JsonDataPakage(mCanvasView.mDrawableList);
+
+        new NetConnection(Url, HttpMethod.POST, new NetConnection.SuccessCallback() {
+            @Override
+            public void onSuccess(String result) {
+                System.out.println("<<<<<<<<<<<<数据传输成功！Requrst = "+result);
+                if(dataCategory == "stop") {
+                    System.out.println(">>>>>>>>>>>>>>>>STOP RUN NOW!!!>>>>>>>>>>>>>");
+                }else if(dataCategory == "data")
+                {
+                    if (dataUpdate == null) {
+                        dataUpdate = new DataUpdate(MainActivity.this, tv_datacollectValue, tv_functionValue, mCanvasView);
+                    } else {
+                        dataUpdate.setmCanvasView(mCanvasView);
+                        dataUpdate.setThreadFlag(true);
+                        dataUpdate.Threadstart();
+                    }
+                }else{
+                    //立即启动成功响应代码
+
+                }
+            }
+        }, new NetConnection.FailCallback() {
+            @Override
+            public void onFail() {
+                System.out.println("<<<<<<<<<<<<数据传输失败！");
+            }
+        },dataCategory,jsonDataPakage.JsonPackage());
     }
 }

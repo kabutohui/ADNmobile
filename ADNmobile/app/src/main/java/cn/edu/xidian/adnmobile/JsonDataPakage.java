@@ -37,8 +37,8 @@ public class JsonDataPakage {
             CBitmap cBitmap = (CBitmap)(mDrawableList.get(i));
             List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put("equip", cBitmap.itemName);
-            map.put("value", cBitmap.setThresholdValue);
+            map.put("\"equip\"", "\""+cBitmap.itemName+"\"");
+            map.put("\"value\"", "\""+cBitmap.setThresholdValue+"\"");
             list.add(map);
             try {
                 jsonObject.put(equipAttr[cBitmap.Item_Attributes - 1], list);

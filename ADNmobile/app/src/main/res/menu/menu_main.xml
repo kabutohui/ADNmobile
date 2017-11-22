@@ -4,13 +4,18 @@
     tools:context="cn.edu.xidian.adnmobile.MainActivity">
 
     <item
-        android:id = "@+id/add_line"
-        android:title= "清除"/>
-    <item
         android:id="@+id/create"
-        android:title="生成"/>
+        android:title="开始运行"/>
 
     <item
         android:id="@+id/upload"
-        android:title="上传"/>
+        android:title="停止运行"/>
+
+    <item
+        android:id = "@+id/add_line"
+        android:title= "清除工作区"/>
+
+    <item
+        android:id = "@+id/about"
+        android:title= "关于我们"/>
 </menu>
