@@ -64,7 +64,7 @@ public class JsonDataPakage {
             return value;
         } catch (JSONException e) {
             e.printStackTrace();
-        }
+    }
 
         return "ERROR";
     }

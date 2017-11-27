@@ -29,6 +29,7 @@ public class ActionWidget  implements CDrawable {
     public final static int datacollect_flag = 1;
     public final static int switch_flag = 2;
     public final static int function_flag = 3;
+    public final static int NotExist_flag = 4;
 
 
 //    //function area X, Y[手机]
@@ -59,8 +60,8 @@ public class ActionWidget  implements CDrawable {
     //server url
     public static final String SERVER_URL_POST = "http://116.196.101.27:36666/todo/api/v1.0/run/";
     public static final String SERVER_URL_GET = "http://116.196.101.27:36666/todo/api/v1.0/value/";
-    public static final String SERVER_URL_STOP = "http://116.196.101.27:36666/todo/api/v1.0/run/";//停止运行
-
+    public static final String SERVER_URL_STOP = "http://116.196.101.27:36666/todo/api/v1.0/stop/";//停止运行
+    public static final String SERVER_URL_IMMEDIATE = "http://116.196.101.27:36666/todo/api/v1.0/do/"; //立即触发
 
     //线程flag
     public static boolean ThreadFlag = false;

@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     //是否进入删除区标志
     private boolean IsDeleteFlag = false;
 
+
     private CBitmap mGamePadBitmap;//临时变量
 
 
@@ -73,10 +74,11 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.add_line:
-                Toast.makeText(this, "清除", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "清除工作区", Toast.LENGTH_SHORT).show();
                 if(dataUpdate != null){
                     dataUpdate.setThreadFlag(false);
                 }
+                JsonPakageandSendMsg(ActionWidget.SERVER_URL_STOP,"stop");
                 mCanvasView.cleanPager();
                 break;
             case R.id.create:
@@ -88,7 +90,15 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                 else
                 {
                     Toast.makeText(this, "生成模块成功！", Toast.LENGTH_LONG).show();
+
+                    //先停止已有的循环
+                    if(dataUpdate != null) {
+                        dataUpdate.setThreadFlag(false);
+                        JsonPakageandSendMsg(ActionWidget.SERVER_URL_STOP, "stop");
+                    }
+
                     //发送数据
+                    iv_rectangle1.setImageResource(R.drawable.direction_right_blue);
                     JsonPakageandSendMsg(ActionWidget.SERVER_URL_POST,"data");
                 }
                 break;
@@ -167,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         mCanvasView.setOnWidgetMoveListener(new CanvasView.onWidgetMoveListener() {
             @Override
             public void onWidgetMove(int index, int x, int y) {
-                Toast.makeText(MainActivity.this, "控件为：" + index + "拖动的X坐标为：" + x + "拖动的Y坐标为：" + y + "[" + Widget_Width + "," + Widget_heigh + "]", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(MainActivity.this, "控件为：" + index + "拖动的X坐标为：" + x + "拖动的Y坐标为：" + y + "[" + Widget_Width + "," + Widget_heigh + "]", Toast.LENGTH_SHORT).show();
                 mGamePadBitmap = (CBitmap) (mCanvasView.mDrawableList.get(index));
                 //判断是否进入删除区
                 if ((Widget_Width - 400 <= x && x <= Widget_Width) && (Widget_heigh - 400 <= y && y <= Widget_heigh)) {
@@ -186,7 +196,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         mCanvasView.setOnWidgetLongPressListener(new CanvasView.onWidgetLongPressListener() {
             @Override
             public void onWidgetLongPress(int index, int x, int y) {
-
+                mGamePadBitmap = (CBitmap) (mCanvasView.mDrawableList.get(index));
+                Toast.makeText(MainActivity.this,"设备名称："+mGamePadBitmap.itemCNName+"\n"+
+                                                 "设备编号："+mGamePadBitmap.itemName, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -234,12 +246,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                                 @Override
                                 public void onClick(View v) {
                                     //立即启动+关闭对话框
-                                    tv_switchValue.setText("开关状态：开");
-                                    tv_switchValue.setTextColor(Color.parseColor("#66ff00"));
                                     if (dataUpdate != null) {
-                                        dataUpdate.setThreadFlag(false);
+                                        dataUpdate.setThreadFlag(false);  //关闭循环进程
                                     }
-                                    JsonPakageandSendMsg(ActionWidget.SERVER_URL_POST, "immediate");
+                                    JsonPakageandSendMsg(ActionWidget.SERVER_URL_IMMEDIATE, "immediate"); //访问服务器
+                                    JsonPakageandSendMsg(ActionWidget.SERVER_URL_STOP,"stop"); //关闭服务器端循环
+
                                     dialog.dismiss();
                                 }
                             });
@@ -266,6 +278,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                     mCanvasView.mDrawableList.remove(index);
                     //trash图标切回正常状态
                     iv_trash.setImageResource(R.drawable.blockly_trash);
+                    mCanvasView.invalidate();
                 }
 
                 //判断图标是否出现在指定的功能区
@@ -291,7 +304,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                             mGamePadBitmap.setYcoords(ActionWidget.functionX);
                         }
                     }
-
+                    mCanvasView.invalidate(); //刷新view
                 }
             }
         });
@@ -344,13 +357,16 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MainActivity.this, "you clicked the" + position, Toast.LENGTH_SHORT).show();
-                mBitmap = BitmapFactory.decodeResource(getResources(), datasave[position].icon);
-                mGamePadBitmap = new CBitmap(mBitmap, 100, 130);
-                mGamePadBitmap.Item_Attributes = datasave[position].itemFlag;
-                mGamePadBitmap.itemName = datasave[position].EngName;
-                mGamePadBitmap.itemCNName = datasave[position].Name;
-                mCanvasView.addCanvasDrawable(mGamePadBitmap);
+                if(datasave[position].itemFlag == ActionWidget.NotExist_flag){
+                    Toast.makeText(MainActivity.this, "此功能尚在开发中，敬请期待！", Toast.LENGTH_LONG).show();
+                }else {
+                    mBitmap = BitmapFactory.decodeResource(getResources(), datasave[position].icon);
+                    mGamePadBitmap = new CBitmap(mBitmap, 100, 130);
+                    mGamePadBitmap.Item_Attributes = datasave[position].itemFlag;
+                    mGamePadBitmap.itemName = datasave[position].EngName;
+                    mGamePadBitmap.itemCNName = datasave[position].Name;
+                    mCanvasView.addCanvasDrawable(mGamePadBitmap);
+                }
                 return true;
             }
         });
@@ -371,21 +387,36 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         new NetConnection(Url, HttpMethod.POST, new NetConnection.SuccessCallback() {
             @Override
             public void onSuccess(String result) {
-                System.out.println("<<<<<<<<<<<<数据传输成功！Requrst = "+result);
+                System.out.println("<<<<<<<<<<<<数据传输成功！result = "+result);
                 if(dataCategory == "stop") {
                     System.out.println(">>>>>>>>>>>>>>>>STOP RUN NOW!!!>>>>>>>>>>>>>");
                 }else if(dataCategory == "data")
                 {
                     if (dataUpdate == null) {
-                        dataUpdate = new DataUpdate(MainActivity.this, tv_datacollectValue, tv_functionValue, mCanvasView);
+                        dataUpdate = new DataUpdate(MainActivity.this, tv_datacollectValue, tv_functionValue, mCanvasView,iv_rectangle2);
                     } else {
+                        tv_switchValue.setText("当前阈值："+dataUpdate.Threshold);
+                        tv_switchValue.setTextColor(Color.parseColor("#707070"));
                         dataUpdate.setmCanvasView(mCanvasView);
                         dataUpdate.setThreadFlag(true);
                         dataUpdate.Threadstart();
                     }
-                }else{
+                } else {
                     //立即启动成功响应代码
-
+                    //更改显示状态
+                    if ( result.equals("on")) {
+                        tv_switchValue.setText("开关状态：开");
+                        iv_rectangle2.setImageResource(R.drawable.direction_right_blue);
+                        tv_switchValue.setTextColor(Color.parseColor("#66ff00"));
+                        tv_functionValue.setText(dataUpdate.functionName + ":" + "开");
+                        tv_functionValue.setTextColor(Color.parseColor("#66ff00"));
+                    } else if(result.equals("off")){
+                        iv_rectangle2.setImageResource(R.drawable.direction_right);
+                        tv_switchValue.setText("开关状态：关");
+                        tv_switchValue.setTextColor(Color.parseColor("#ff3300"));
+                        tv_functionValue.setText(dataUpdate.functionName+":"+"关");
+                        tv_functionValue.setTextColor(Color.parseColor("#ff3300"));
+                    }
                 }
             }
         }, new NetConnection.FailCallback() {

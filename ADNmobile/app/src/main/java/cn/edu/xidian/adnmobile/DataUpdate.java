@@ -2,6 +2,7 @@ package cn.edu.xidian.adnmobile;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import cn.edu.xidian.adnmobile.view.CBitmap;
@@ -14,18 +15,20 @@ public class DataUpdate {
     private Context context;
     private static MyThread myThread;
     private TextView tv_datacollect,tv_function;
-    private String datacollectName,functionName,datacollectEnName;
-    private String Threshold; //获取设置的阈值
+    public String datacollectName,functionName,datacollectEnName;
+    public String Threshold; //获取设置的阈值
     private int itemID;
     private CanvasView mCanvasView;
     private CBitmap mGamePadBitmap;//临时变量
+    private ImageView switch2function;
     private boolean ThreadFlag = false;
 
-    public DataUpdate (Context context,TextView tv_datacollect,TextView tv_function,CanvasView mCanvasView){
+    public DataUpdate (Context context,TextView tv_datacollect,TextView tv_function,CanvasView mCanvasView,ImageView switch2function){
         this.context = context;
         this.tv_datacollect = tv_datacollect;
         this.tv_function = tv_function;
         this.mCanvasView = mCanvasView;
+        this.switch2function = switch2function;
 
         this.myThread = new MyThread();
         ThreadFlag = true;
@@ -60,6 +63,7 @@ public class DataUpdate {
             {
                 case ActionWidget.datacollect_flag:
                     datacollectName = mGamePadBitmap.itemCNName;
+                    datacollectEnName= mGamePadBitmap.itemName;
                     break;
                 case ActionWidget.function_flag:
                     functionName = mGamePadBitmap.itemCNName;
@@ -86,7 +90,7 @@ public class DataUpdate {
                 System.out.println("发送获取传感器数据请求");
                 try {
                     // 每个500毫秒向服务器发送一次请求
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -99,9 +103,11 @@ public class DataUpdate {
                         tv_datacollect.setText(datacollectName+":"+jsonDataPakage.JsonParse(result));
                         if (Float.parseFloat(Threshold) <=  Float.parseFloat(jsonDataPakage.JsonParse(result)))
                         {
+                            switch2function.setImageResource(R.drawable.direction_right_blue);
                             tv_function.setText(functionName+":"+"开");
                             tv_function.setTextColor(Color.parseColor("#66ff00"));//打开为绿色
                         }else{
+                            switch2function.setImageResource(R.drawable.direction_right);
                             tv_function.setText(functionName+":"+"关");
                             tv_function.setTextColor(Color.parseColor("#ff3300"));//打开为红色
                         }

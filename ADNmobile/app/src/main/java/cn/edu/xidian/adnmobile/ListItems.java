@@ -19,19 +19,28 @@ public class ListItems {
 
     public  ItemBase[] datasave = {
             //datacollect
-            new ItemBase("时钟","获取当前的时间",R.drawable.datacollect_clock,"Clock",ActionWidget.datacollect_flag),
-            new ItemBase( "环境湿度","获取环境当前的湿度",R.drawable.datacollect_humidity,"Humidity",ActionWidget.datacollect_flag),
-            new ItemBase("光照强度","获取环境当前的光线强度",R.drawable.datacollect_lightsensor,"Light_sensitive",ActionWidget.datacollect_flag),
-            new ItemBase("环境温度","获取环境当前的温度",R.drawable.datacollect_temperature,"dht101",ActionWidget.datacollect_flag),
-            new ItemBase("土壤湿度","获取土壤湿度",R.drawable.datacollect_soilwet,"Soilwet",ActionWidget.datacollect_flag),
-            new ItemBase("水深传感器","获取当前水深",R.drawable.datacollect_waterdeep,"Waterdeep",ActionWidget.datacollect_flag),
+            //new ItemBase("时钟","获取当前的时间",R.drawable.datacollect_clock,"Clock",ActionWidget.datacollect_flag),
+            new ItemBase( "环境湿度","获取环境当前的湿度",R.drawable.datacollect_humidity,"dht101_2",ActionWidget.datacollect_flag),
+            new ItemBase("光照强度","获取环境当前的光线强度",R.drawable.datacollect_lightsensor,"lm201",ActionWidget.datacollect_flag),
+            new ItemBase("环境温度","获取环境当前的温度",R.drawable.datacollect_temperature,"dht101_1",ActionWidget.datacollect_flag),
+            new ItemBase("土壤湿度","获取土壤湿度",R.drawable.datacollect_soilwet,"soilhumidity001",ActionWidget.datacollect_flag),
+            new ItemBase("水深传感器","获取当前水深",R.drawable.datacollect_waterdeep,"waterdepth001",ActionWidget.datacollect_flag),
             //switch
-            new ItemBase("switch","设置阈值以控制通断",R.drawable.switch_relay,"switch",ActionWidget.switch_flag),
+            new ItemBase("继电器开关","设置阈值以控制通断",R.drawable.switch_relay,"switch101",ActionWidget.switch_flag),
             //function
             new ItemBase("灯泡"," ",R.drawable.function_bulb,"Bulb",ActionWidget.function_flag),
             new ItemBase("风扇"," ",R.drawable.function_fan,"Fan",ActionWidget.function_flag),
-            new ItemBase("空调"," ",R.drawable.function_aircondition,"Aircondition",ActionWidget.function_flag),
-            new ItemBase("家庭音响"," ",R.drawable.function_sound,"Sound",ActionWidget.function_flag)};
+            new ItemBase("四旋翼无人机"," ",R.drawable.function_aircraft,"Aircraft",ActionWidget.function_flag),
+
+//            new ItemBase("空调"," ",R.drawable.function_aircondition,"Aircondition",ActionWidget.function_flag),
+//            new ItemBase("家庭音响"," ",R.drawable.function_sound,"Sound",ActionWidget.function_flag),
+
+            //not exist
+            new ItemBase("时钟","获取当前的时间",R.drawable.datacollect_clock_gray,"Clock",ActionWidget.NotExist_flag),
+            new ItemBase("空调"," ",R.drawable.function_aircondition_gray,"Aircondition",ActionWidget.NotExist_flag),
+            new ItemBase("家庭音响"," ",R.drawable.function_sound_gray,"Sound",ActionWidget.NotExist_flag),
+            new ItemBase("智能小车"," ",R.drawable.function_smartcar_gray,"Smartcar",ActionWidget.NotExist_flag),
+    };
 
 //    public  ItemBase[][] datasave = {
 //            //datacollect
